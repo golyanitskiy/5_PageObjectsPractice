@@ -1,45 +1,14 @@
 package guru.qa.pages;
 
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.github.javafaker.Faker;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
+import guru.qa.data.RegistrationFormData;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static java.lang.String.format;
 
 public class RegistrationFormPage {
-    Faker faker = new Faker(new Locale("ru"));
-    String name = faker.name().firstName();
-    String surname = faker.name().lastName();
-    String expectedFullName = format("%s %s", name, surname);
-    String sex = "Male";
-    String email = faker.bothify("?????????????###@?????.??");
-    String phoneNumber = faker.number().digits(10);
-    Date date = faker.date().birthday(16, 99);
-    LocalDate desiredDate = date.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
-    String day = String.valueOf(desiredDate.getDayOfMonth());
-    String month = String.valueOf(desiredDate.getMonth()).toLowerCase();
-    String capitalizedMonth = month.substring(0, 1).toUpperCase() + month.substring(1);
-    String year = String.valueOf(desiredDate.getYear());
-    String subject = "Computer Science";
-    String hobby = "Reading";
-    String expectedDateOfBirth = format("%s %s,%s", day, capitalizedMonth, year);
-    String address = faker.address().fullAddress();
-    String filePath = "image.jpg";
-    String state = "Rajasthan";
-    String city = "Jaipur";
-    SelenideElement formSubmitButton = $("#submit");
-    SelenideElement confirmationCloseButton = $("#closeLargeModal");
-
+    RegistrationFormData data = new RegistrationFormData();
     //    actions
     public RegistrationFormPage openPage() {
         Selenide.open("/automation-practice-form");
@@ -49,84 +18,85 @@ public class RegistrationFormPage {
     }
 
     public RegistrationFormPage setFirstName() {
-        $("#firstName").setValue(name);
+        $("#firstName").setValue(data.name);
 
         return this;
     }
 
     public RegistrationFormPage setSurname() {
-        $("#lastName").setValue(surname);
+        $("#lastName").setValue(data.surname);
 
         return this;
     }
 
     public RegistrationFormPage setEmail() {
-        $("#userEmail").setValue(email);
+        $("#userEmail").setValue(data.email);
 
         return this;
     }
 
     public RegistrationFormPage selectGender() {
-        $("#genterWrapper").$(byText(sex)).click();
+        $("#genterWrapper").$(byText(data.sex)).click();
 
         return this;
     }
 
     public RegistrationFormPage setPhone() {
-        $("#userNumber").setValue(phoneNumber);
+        $("#userNumber").setValue(data.phoneNumber);
 
         return this;
     }
 
     public RegistrationFormPage setBirthDate() {
         $("#dateOfBirthInput").click();
-        $(".react-datepicker__month-select").selectOption(capitalizedMonth);
-        $(".react-datepicker__year-select").selectOption(year);
-        $$(".react-datepicker__day:not(.react-datepicker__day--outside-month)").findBy(text(day)).click();
+        $(".react-datepicker__month-select").selectOption(data.capitalizedMonth);
+        $(".react-datepicker__year-select").selectOption(data.year);
+        $$(".react-datepicker__day:not(.react-datepicker__day--outside-month)")
+                .findBy(text(data.day)).click();
 
         return this;
     }
 
     public RegistrationFormPage setSubject() {
         $("#subjectsInput").setValue("Co");
-        $$("[id^='react-select-2-option']").findBy(text(subject)).click();
+        $$("[id^='react-select-2-option']").findBy(text(data.subject)).click();
 
         return this;
     }
 
     public RegistrationFormPage selectHobby() {
-        $("#hobbiesWrapper").$(byText(hobby)).click();
+        $("#hobbiesWrapper").$(byText(data.hobby)).click();
         return this;
     }
 
     public RegistrationFormPage imageUpload() {
-        $("#uploadPicture").uploadFromClasspath(filePath);
+        $("#uploadPicture").uploadFromClasspath(data.filePath);
 
         return this;
     }
 
     public RegistrationFormPage setAddress() {
-        $("#currentAddress").setValue(address);
+        $("#currentAddress").setValue(data.address);
 
         return this;
     }
 
     public RegistrationFormPage setState() {
         $("#state").click();
-        $$("[id^='react-select-3-option']").findBy(text(state)).click();
+        $$("[id^='react-select-3-option']").findBy(text(data.state)).click();
 
         return this;
     }
 
     public RegistrationFormPage setCity() {
         $("#city").click();
-        $$("[id^='react-select-4-option']").findBy(text(city)).click();
+        $$("[id^='react-select-4-option']").findBy(text(data.city)).click();
 
         return this;
     }
 
     public RegistrationFormPage submitForm() {
-        formSubmitButton.click();
+        data.formSubmitButton.click();
 
         return this;
     }
@@ -135,21 +105,21 @@ public class RegistrationFormPage {
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
 
         $(".table-responsive").shouldHave(
-                text(expectedFullName),
-                text(email),
-                text(sex),
-                text(phoneNumber),
-                text(expectedDateOfBirth),
-                text(subject),
-                text(hobby),
-                text(filePath),
-                text(address),
-                text(state + ' ' + city));
+                text(data.expectedFullName),
+                text(data.email),
+                text(data.sex),
+                text(data.phoneNumber),
+                text(data.expectedDateOfBirth),
+                text(data.subject),
+                text(data.hobby),
+                text(data.filePath),
+                text(data.address),
+                text(data.state + ' ' + data.city));
 
         return this;
     }
 
     public void closeConfirmation() {
-        confirmationCloseButton.click();
+        data.confirmationCloseButton.click();
     }
 }

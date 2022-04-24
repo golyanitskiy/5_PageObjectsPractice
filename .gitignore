@@ -168,3 +168,4 @@ gradle-app.setting
 /.idea/
 .DS_Store
 /4_basics_java.iml
+/.gradle/
