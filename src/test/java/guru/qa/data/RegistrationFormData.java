@@ -2,6 +2,7 @@ package guru.qa.data;
 
 import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.Faker;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -26,7 +27,7 @@ public class RegistrationFormData {
             .toLocalDate();
     public String day = String.valueOf(desiredDate.getDayOfMonth());
     String month = String.valueOf(desiredDate.getMonth()).toLowerCase();
-    public String capitalizedMonth = month.substring(0, 1).toUpperCase() + month.substring(1);
+    public String capitalizedMonth = StringUtils.capitalize(month);
     public String year = String.valueOf(desiredDate.getYear());
     public String subject = "Computer Science";
     public String hobby = "Reading";
